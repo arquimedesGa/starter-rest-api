@@ -8,7 +8,10 @@ const autenticacao = require('../intermediarios/autenticacao');
 
 const router = Router();
 
-router.get('/', (req, res) => { res.send('Bem vindo a API do desafio Final'); });
+router.get('/', (req, res) => { res.send(
+    '<h1>Bem vindo a API do desafio Final</h1>' +                                                                                              
+    '<h2>Para acessar a documentação da API acesse o link: <a href="https://cute-colt-gabardine.cyclic.app/api-docs">https://cute-colt-gabardine.cyclic.app/api-docs</a></h2>'
+    ); });
 
 router.get('/categoria', listarCategorias);
 

@@ -1,0 +1,61 @@
+{   "openapi" : "3.0.0",
+    "info" : {
+        "title" : "API Desafio Final Cubos Academy, Arquimedes, Pablo, Mauricio, Diego 2023",
+        "description" : "API Desafio Final Cubos Academy",
+        "Contact" : {
+            "name" : "Pablo, Mauricio, Diego, Arquimedes",
+            "email" : "gabox2050@gmail.com"
+        },
+        "version" : "1.0.0"
+    },
+    "paths" : {
+        "/usuario" : {
+            "post": {
+                "description": "Cria um novo usuário",
+                "requestBody": {
+                "description": "Dados do usuário neccesarios para o cadastro",
+                "content" : {
+                    "aplication/json" : {
+                        "schema" : {
+                            "$ref" : "#/components/schemas/usuario"
+                        }
+                    }
+                }
+
+            },
+
+            "responses" : {
+                "200" : {
+                    "description" : "Usuário criado com sucesso"
+                },
+                "400" : {
+                    "description" : "Erro ao criar usuário"
+                },
+                "409" : {
+                    "description" : "Usuário ja Cadastrado"
+                }
+            }
+
+            }
+        }
+    },
+    "components" : {
+        "schemas" : {
+            "usuario" : {
+                "type" : "object",
+                "properties" : {
+                    "nome" : {
+                        "type" : "string"
+                    },
+                    "email" : {
+                        "type" : "string"
+                    },
+                    "senha" : {
+                        "type" : "string"
+                    }
+                }
+            }
+        }
+    }
+
+}

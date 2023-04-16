@@ -18,7 +18,7 @@ const rotaUsuario = {
       return res.status(201).send();
     } catch (error) {
       if(error.constraint) {
-        return res.status(500).json({Mensagem : "Email de Usuario Ja Existe Cadastro nao Realizado"})
+        return res.status(409).json({Mensagem : "Usuário já cadastrado"})
       };
     };
   },
