@@ -1,4 +1,4 @@
-{   "openapi" : "3.0.0",
+{   "openapi" : "3.0.3",
     "info" : {
         "title" : "API Desafio Final Cubos Academy, Arquimedes, Pablo, Mauricio, Diego 2023",
         "description" : "API Desafio Final Cubos Academy",
@@ -9,6 +9,9 @@
         "version" : "1.0.0"
     },
     "paths" : {
+        "tags" : [
+            "Usuario"
+        ],
         "/usuario" : {
             "post": {
                 "description": "Cria um novo usuário",
@@ -23,7 +26,6 @@
                 }
 
             },
-
             "responses" : {
                 "200" : {
                     "description" : "Usuário criado com sucesso"
@@ -36,26 +38,130 @@
                 }
             }
 
+        },
+
+        "put" : {
+            "description" : "Atualiza um usuário",
+            "requestBody" : {
+                "description" : "Dados do usuário para atualizar",
+                "content" : {
+                    "aplication/json" : {
+                        "schema" : {
+                            "$ref" : "#/components/schemas/usuario"
+                        }
+                    }
+                }
+            },
+            "responses" : {
+                "200" : {
+                    "description" : "Usuário atualizado com sucesso"
+                },
+                "400" : {
+                    "description" : "Erro ao atualizar usuário"
+                }
+            }
+        },
+
+        "get" : {
+            "description" : "Retorna um usuário",
+            "responses" : {
+                "200" : {
+                    "description" : "Usuário retornado com sucesso"
+                },
+                "400" : {
+                    "description" : "Erro ao retornar usuário"
+                }
+            }
+        }
+        
+        },
+        "/login" : {
+            "post": {
+                "description": "Faz o login do usuário",
+                "requestBody": {
+                "description": "Dados do usuário neccesarios para o login",
+                "content" : {
+                    "aplication/json" : {
+                        "schema" : {
+                            "$ref" : "#/components/schemas/login"
+                        }
+                    }
+                }
+
+            },
+            "responses" : {
+                "200" : {
+                    "description" : "Login realizado com sucesso"
+                },
+                "400" : {
+                    "description" : "Erro ao realizar login"
+                },
+                "404" : {
+                    "description" : "Usuário não encontrado"
+                }
+            }
+
+        }
+        
+        },
+        "/categoria" : {
+            "get": {
+                "description": "Retorna todas as categorias",
+                "responses" : {
+                    "200" : {
+                        "description" : "Categorias retornadas com sucesso"
+                    },
+                    "400" : {
+                        "description" : "Erro ao retornar categorias"
+                    }
+                }
             }
         }
     },
+    
     "components" : {
         "schemas" : {
             "usuario" : {
                 "type" : "object",
                 "properties" : {
                     "nome" : {
-                        "type" : "string"
+                        "type" : "string",
+                        "description" : "Nome do usuário",
+                        "example" : "Pablo"
                     },
                     "email" : {
-                        "type" : "string"
+                        "type" : "string",
+                        "description" : "Email do usuário",
+                        "example" : "pablo@gmail.com"
                     },
                     "senha" : {
-                        "type" : "string"
+                        "type" : "string",
+                        "description" : "Senha do usuário",
+                        "example" : "1234567"
                     }
                 }
-            }
-        }
-    }
+            },
+            "login" : {
+                "type" : "object",
+                "properties" : {
+                    "email" : {
+                        "type" : "string",
+                        "description" : "Email do usuário",
+                        "example" : "pablo@gmail.com"
+                    },
+                    "senha" : {
+                        "type" : "string",
+                        "description" : "Senha do usuário",
+                        "example" : "1234567"
+                    }
+             }
 
+         }
+
+        
+
+}
+    
+    }
+    
 }
