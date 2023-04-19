@@ -27,7 +27,7 @@
 
             },
             "responses" : {
-                "200" : {
+                "201" : {
                     "description" : "Usuário criado com sucesso"
                 },
                 "400" : {
@@ -35,6 +35,9 @@
                 },
                 "409" : {
                     "description" : "Usuário ja Cadastrado"
+                },
+                "500" : {
+                    "description" : "Erro interno do servidor"
                 }
             }
 
