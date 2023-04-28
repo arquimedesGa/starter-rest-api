@@ -1,6 +1,6 @@
 const joi = require('joi');
 
-const schemaUsuario = joi.object({
+const schemaLogin = joi.object({
     senha: joi.string().required().messages({
         'string.empty': 'O campo senha não pode estar vazio',
         'any.required': 'O campo senha é obrigatório',
@@ -12,4 +12,4 @@ const schemaUsuario = joi.object({
     })
 });
 
-module.exports = schemaUsuario;
+module.exports = schemaLogin;

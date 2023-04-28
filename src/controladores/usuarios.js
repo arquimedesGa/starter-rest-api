@@ -19,6 +19,8 @@ const rotaUsuario = {
     } catch (error) {
       if(error.constraint) {
         return res.status(409).json({Mensagem : "Usuário já cadastrado"})
+      } else {
+        return res.status(500).json(error.message);
       };
     };
   },
@@ -30,7 +32,7 @@ const rotaUsuario = {
       const consultaUSuario = await knex("usuarios").select('*').where({ email });
 
       if (!consultaUSuario[0]) {
-        return res.status(400).json({ message: "usuario ou senha invalido" });
+        return res.status(400).json({ mensagem: "usuario ou senha invalido" });
       }
 
       const validarLogin = await bcrypt.compare(
@@ -39,7 +41,7 @@ const rotaUsuario = {
       );
 
       if (!validarLogin) {
-        return res.status(400).json({ message: "usuario ou senha invalido" });
+        return res.status(400).json({ mensagem: "usuario ou senha invalido" });
       }
 
       const token = jwt.sign(
@@ -87,8 +89,8 @@ const rotaUsuario = {
 
       const alterandoUsuario = await knex("usuarios").update({ nome, email, senha: criptografiSenha }).where({ id: usuario.id });
 
-
       return res.status(200).send();
+      
     } catch (error) {
       return res.status(500).json({
         mensagem:
