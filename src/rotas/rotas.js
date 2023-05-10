@@ -46,5 +46,17 @@ router.get('/cliente/', autenticacao, rotaClientes.listarClientes);
 
 router.get('/cliente/:id', autenticacao, rotaClientes.detalharCliente);
 
+//esse controlador não foi feito ele vai estar no controlador de pedidos na pasta de controladores
+
+router.post('/pedido', autenticacao, );
+
+//esse controlador não foi feito ele vai estar no controlador de pedidos na pasta de controladores
+
+router.get('/pedido', autenticacao, );
+
+//esse controlador não foi feito ele vai estar no controlador de upload de arquivo na pasta de controladores
+
+router.post('/arquivo/upload', autenticacao, );
+
 
 module.exports = router;
