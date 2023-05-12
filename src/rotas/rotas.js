@@ -53,7 +53,7 @@ router.post('/pedido', autenticacao, rotaPedidos.cadastrarPedido);
 
 //esse controlador não foi feito ele vai estar no controlador de pedidos na pasta de controladores
 
-router.get('/pedido', autenticacao, );
+router.get('/pedido', autenticacao, rotaPedidos.listarPedidos);
 
 //esse controlador não foi feito ele vai estar no controlador de upload de arquivo na pasta de controladores
 

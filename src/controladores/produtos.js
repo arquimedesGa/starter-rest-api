@@ -100,6 +100,14 @@ const rotaProdutos = {
                 return res.status(404).json({messagem: 'Produto não encontrado'});
             };
 
+
+            const pedido = await knex('pedido_produtos').where({ produto_id: id });
+
+        
+            if (pedido.length > 0) {
+                return res.status(400).json({messagem: 'Não é possível excluir um produto que está em um pedido'});
+            }
+
             const deletarProduto = await knex('produtos').where({ id }).del();
 
             if (!deletarProduto) {
