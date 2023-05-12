@@ -97,7 +97,7 @@ const rotaProdutos = {
             const produto = await knex('produtos').where({ id }).first();
 
             if (!produto) {
-                return res.status(404).json({messagem: 'Produto não encontrado'});
+                return res.status(400).json({messagem: 'Produto não encontrado'});
             };
 
 

@@ -11,7 +11,7 @@ const pedidos = {
             const validarCliente = await knex('clientes').where({id: cliente_id});
 
             if(!validarCliente[0]) {
-                return res.status(404).json({Mensagem : 'Cliente não encontrado'});
+                return res.status(400).json({Mensagem : 'Cliente não encontrado'});
             };
 
             const produto = await knex('produtos').whereIn('id', pedido_produtos.map(produto => produto.produto_id));
@@ -22,7 +22,7 @@ const pedidos = {
 
             pedido_produtos.map(produtoBody => {
                 const produtoEncontrado = produto.find(produto => produto.id === produtoBody.produto_id);
-                produtoBody.valor = produtoEncontrado.valor;
+
                 if(!produtoEncontrado) {
                     idsProdutos.push({ id : produtoBody.produto_id});
                 };
@@ -30,11 +30,14 @@ const pedidos = {
             });
         
             if(idsProdutos.length > 0) {
-                return res.status(404).json({Mensagem : 'Produto não encontrado' , Ids : idsProdutos});
+                return res.status(400).json({Mensagem : 'Produto não encontrado' , Ids : idsProdutos});
             }; 
 
             pedido_produtos.map(produtobody => {
                 const produtoEncontrado = produto.find(produto => produto.id === produtobody.produto_id);
+                if(produtoEncontrado.valor){
+                    produtobody.valor = produtoEncontrado.valor;
+                }
                 if(produtoEncontrado.quantidade_estoque < produtobody.quantidade_produto) {
                     quantidadeProdutos.push({ id : produtobody.produto_id});
 
@@ -43,7 +46,7 @@ const pedidos = {
             });
 
             if(quantidadeProdutos.length > 0) {
-                return res.status(404).json({Mensagem : 'Quantidade solicitada fora de estoque', Ids : quantidadeProdutos});
+                return res.status(400).json({Mensagem : 'Quantidade solicitada fora de estoque', Ids : quantidadeProdutos});
             };
             
             const valorTotal = pedido_produtos.reduce((acc, produtobody) => {
@@ -74,7 +77,7 @@ const pedidos = {
             return res.status(200).json({Mensagem : 'Pedido cadastrado com sucesso'});
 
         } catch (error) {
-            return res.status(400).json(error.message);
+            return res.status(500).json(error.message);
         };
     },
 
@@ -102,7 +105,7 @@ const pedidos = {
             const pedidosSemId = await knex('pedidos');
 
             if(!pedidosSemId[0]) {
-                return res.status(404).json({Mensagem : 'Não há pedidos cadastrados'});
+                return res.status(400).json({Mensagem : 'Não há pedidos cadastrados'});
             };
 
             const pedidosSemIdComProdutos = await knex('pedido_produtos').whereIn('pedido_id', pedidosSemId.map(pedido => pedido.id));
@@ -115,7 +118,7 @@ const pedidos = {
             return res.status(200).json(pedidosSemIdComProdutosFormatados);
 
         } catch (error) {
-            return res.status(400).json(error.message);
+            return res.status(500).json(error.message);
         };
     }
 }
