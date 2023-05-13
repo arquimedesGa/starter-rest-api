@@ -1,4 +1,5 @@
 const knex = require('../conexao');
+const s3 = require('../utils/aws');
 
 const rotaProdutos = {
     async cadastrarProduto(req, res) {
@@ -119,7 +120,50 @@ const rotaProdutos = {
         } catch (error) {
             return res.status(500).json(error.message);
         };
+    },
+
+    async uploadArquivo(req, res) {
+        const { file } = req
+
+        try {
+
+            if(!file) {
+                return res.status(400).json({messagem: 'Arquivo não encontrado'});
+            };
+
+            const arquivo = await s3.upload({
+                Bucket: process.env.BUCKET_NAME,
+                Key: `${Date.now()}-${file.originalname}`,
+                Body: file.buffer,
+                ContentType: file.mimetype,
+
+            }).promise();
+            return res.status(200).json({url : arquivo.Location,
+                nome: arquivo.Key,});
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+
+    },
+
+    async listarArquivos(req, res) {
+        try {
+            const arquivo = await s3.listObjects({ Bucket: process.env.BUCKET_NAME }).promise();
+
+            const arquivos = arquivo.Contents.map(arquivo => {
+                return {
+                    url: `https://${process.env.BUCKET_NAME}.s3.us-east-005.backblazeb2.com/${arquivo.Key}`,
+                    diretório: arquivo.Key
+                }
+            });
+            return res.status(200).json(arquivos);
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+
     }
+
+
 
 };
 

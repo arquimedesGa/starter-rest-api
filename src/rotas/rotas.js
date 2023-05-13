@@ -10,6 +10,7 @@ const validarRequisicao = require('../intermediarios/validarcorporequisicao');
 const rotaProdutos = require('../controladores/produtos');
 const rotaClientes = require('../controladores/clientes');
 const rotaPedidos = require('../controladores/pedidos');
+const multer = require('../intermediarios/multer');
 
 
 const router = Router();
@@ -57,11 +58,11 @@ router.get('/pedido', autenticacao, rotaPedidos.listarPedidos);
 
 //esse controlador não foi feito ele vai estar no controlador de upload de arquivo na pasta de controladores
 
-router.post('/arquivo/upload', autenticacao, );
+router.post('/arquivo/upload', multer.single('imagem'), autenticacao, rotaProdutos.uploadArquivo);
 
 //esse controlador não foi feito ele vai estar no controlador de upload de arquivo na pasta de controladores
 
-router.get('/arquivo/', autenticacao, );
+router.get('/arquivo', autenticacao, rotaProdutos.listarArquivos);
 
 
 module.exports = router;
