@@ -59,6 +59,12 @@ const pedidos = {
 
             const guardandoPedido = await knex('pedidos').insert({cliente_id, observacao, valor_total: valorTotal}).returning('*');
 
+            const atualizarEstoque = await pedido_produtos.map(async produtoBody => {
+                const produtoEncontrado = produto.find(produto => produto.id === produtoBody.produto_id);
+                const estoqueAtualizado = produtoEncontrado.quantidade_estoque - produtoBody.quantidade_produto;
+                await knex('produtos').where({id: produtoBody.produto_id}).update({quantidade_estoque: estoqueAtualizado});
+            });
+
             await knex('pedido_produtos').insert(pedido_produtos.map(produtoBody => 
                 ({pedido_id: guardandoPedido[0].id,
                  produto_id: produtoBody.produto_id,

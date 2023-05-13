@@ -3,8 +3,8 @@ const s3 = require('../utils/aws');
 
 const rotaProdutos = {
     async cadastrarProduto(req, res) {
-        const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
-
+        const { descricao, quantidade_estoque, valor, categoria_id, produto_imagem } = req.body;
+    
         try {
             
             const categoria = await knex('categorias').where({ id: categoria_id }).first();
@@ -13,7 +13,7 @@ const rotaProdutos = {
                 return res.status(404).json({messagem: 'Categoria não encontrada'});
             };
 
-            const produto = await knex('produtos').insert({ descricao, quantidade_estoque, valor, categoria_id }).returning('*');
+            const produto = await knex('produtos').insert({ descricao, quantidade_estoque, valor, categoria_id, produto_imagem }).returning('*');
 
             return res.status(201).json(produto);
 
@@ -25,7 +25,7 @@ const rotaProdutos = {
 
     async atualizarProduto(req, res) {
         const { id } = req.params;
-        const { descricao, quantidade_estoque, valor, categoria_id } = req.body;
+        let { descricao, quantidade_estoque, valor, categoria_id, produto_imagem } = req.body;
  
         try {
             const produto = await knex('produtos').where({ id }).first();
@@ -41,7 +41,26 @@ const rotaProdutos = {
                 return res.status(404).json({messagem: 'Categoria não encontrada'});
             };
 
-            const atualizarProduto = await knex('produtos').where({ id }).update({ descricao, quantidade_estoque, valor, categoria_id }).returning('*');
+
+            if (produto_imagem !== produto.produto_imagem) {
+                if (produto.produto_imagem) { 
+                    let separandoImagem = produto.produto_imagem.split('/');
+
+                    let pathImagem = separandoImagem[separandoImagem.length - 1].toString();
+
+                    s3.deleteObject({
+                        Bucket: process.env.BUCKET_NAME,
+                        Key: pathImagem
+                        }).promise();
+        
+                };
+                if (!produto_imagem) {
+                    produto_imagem = null;
+                }
+                
+            };
+
+            const atualizarProduto = await knex('produtos').where({ id }).update({ descricao, quantidade_estoque, valor, categoria_id, produto_imagem}).returning('*');
 
             if (!atualizarProduto) {
                 return res.status(400).json({messagem: 'Não foi possível atualizar o produto'});
@@ -108,7 +127,19 @@ const rotaProdutos = {
             if (pedido.length > 0) {
                 return res.status(400).json({messagem: 'Não é possível excluir um produto que está em um pedido'});
             }
+           
+            if (produto.produto_imagem) { 
+                let separandoImagem = produto.produto_imagem.split('/');
 
+                let pathImagem = separandoImagem[separandoImagem.length - 1].toString();
+
+                s3.deleteObject({
+                    Bucket: process.env.BUCKET_NAME,
+                    Key: pathImagem
+                }).promise();
+        
+            };
+                
             const deletarProduto = await knex('produtos').where({ id }).del();
 
             if (!deletarProduto) {
@@ -142,7 +173,7 @@ const rotaProdutos = {
                 nome: arquivo.Key,});
         } catch (error) {
             return res.status(500).json(error.message);
-        }
+        };
 
     },
 
@@ -159,11 +190,9 @@ const rotaProdutos = {
             return res.status(200).json(arquivos);
         } catch (error) {
             return res.status(500).json(error.message);
-        }
+        };
 
     }
-
-
 
 };
 

@@ -23,6 +23,9 @@ const schemaproduto = joi.object({
         'any.required': 'O campo categoria_id é obrigatório',
         'number.empty': 'O campo categoria_id não pode estar vazio',
     }),
+    produto_imagem: joi.any().messages({
+        'string.empty': 'O campo produto_imagem não pode estar vazio',
+    }),
 });
 
 module.exports = schemaproduto;
