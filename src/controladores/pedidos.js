@@ -9,7 +9,8 @@ const pedidos = {
 
         try {
             const validarCliente = await knex('clientes').where({id: cliente_id});
-
+            const emailCliente = validarCliente[0].email;
+            const nomeCliente = validarCliente[0].nome;
             if(!validarCliente[0]) {
                 return res.status(400).json({Mensagem : 'Cliente não encontrado'});
             };
@@ -59,11 +60,13 @@ const pedidos = {
 
             const guardandoPedido = await knex('pedidos').insert({cliente_id, observacao, valor_total: valorTotal}).returning('*');
 
-            const atualizarEstoque = await pedido_produtos.map(async produtoBody => {
+            await pedido_produtos.map(async produtoBody => {
                 const produtoEncontrado = produto.find(produto => produto.id === produtoBody.produto_id);
                 const estoqueAtualizado = produtoEncontrado.quantidade_estoque - produtoBody.quantidade_produto;
                 await knex('produtos').where({id: produtoBody.produto_id}).update({quantidade_estoque: estoqueAtualizado});
             });
+            
+        
 
             await knex('pedido_produtos').insert(pedido_produtos.map(produtoBody => 
                 ({pedido_id: guardandoPedido[0].id,
@@ -71,11 +74,11 @@ const pedidos = {
                  quantidade_produto: produtoBody.quantidade_produto,
                  valor_produto: produtoBody.valor}))).returning('*');
 
-            const html = await compiladorHtml('./src/templates/pedidofeito.html', {nome: usuario.nome, valor: valorTotal/100});
-
+            const html = await compiladorHtml('./src/templates/pedidofeito.html', {nome: nomeCliente, valor: valorTotal/100});
+                   
             transportador.sendMail({
                 from: process.env.EMAIL_FROM,
-                to: usuario.email,
+                to: emailCliente,
                 subject: "Pedido realizado com sucesso",
                 html,
             });
