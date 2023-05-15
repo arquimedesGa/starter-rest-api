@@ -5,6 +5,7 @@ const schemaUsuario = require('../validacoes/schemausuario');
 const schemalogin = require('../validacoes/schemalogin');
 const schemaproduto = require('../validacoes/schemaproduto');
 const schemacliente = require('../validacoes/schemacliente');
+const schemapedido = require('../validacoes/schemapedido');
 const autenticacao = require('../intermediarios/autenticacao');
 const validarRequisicao = require('../intermediarios/validarcorporequisicao');
 const rotaProdutos = require('../controladores/produtos');
@@ -48,19 +49,14 @@ router.get('/cliente/', autenticacao, rotaClientes.listarClientes);
 
 router.get('/cliente/:id', autenticacao, rotaClientes.detalharCliente);
 
-//esse controlador não foi feito ele vai estar no controlador de pedidos na pasta de controladores
+router.post('/pedido', autenticacao, validarRequisicao(schemapedido), rotaPedidos.cadastrarPedido);
 
-router.post('/pedido', autenticacao, rotaPedidos.cadastrarPedido);
-
-//esse controlador não foi feito ele vai estar no controlador de pedidos na pasta de controladores
 
 router.get('/pedido', autenticacao, rotaPedidos.listarPedidos);
 
-//esse controlador não foi feito ele vai estar no controlador de upload de arquivo na pasta de controladores
 
 router.post('/arquivo/upload', multer.single('imagem'), autenticacao, rotaProdutos.uploadArquivo);
 
-//esse controlador não foi feito ele vai estar no controlador de upload de arquivo na pasta de controladores
 
 router.get('/arquivo', autenticacao, rotaProdutos.listarArquivos);
 
